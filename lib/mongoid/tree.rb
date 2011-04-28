@@ -202,7 +202,8 @@ module Mongoid # :nodoc:
     ##
     # Returns an array of this document's ancestors and itself
     def ancestors_and_self
-      ancestors + [self]
+      # ancestors + [self]
+      base_class.any_of({:_id.in => parent_ids}, {:_id => self.id })
     end
 
     ##
@@ -220,7 +221,8 @@ module Mongoid # :nodoc:
     ##
     # Returns and array of this document's descendants and itself
     def descendants_and_self
-      [self] + descendants
+      # [self] + descendants
+      base_class.any_of({:parent_ids => self.id }, {:_id => self.id })
     end
 
     ##
