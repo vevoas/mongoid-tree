@@ -43,6 +43,12 @@ module Mongoid
       end
 
       ##
+      # Returns a chainable criteria for this document's ancestors
+      def ancestors
+        base_class.unscoped.where(:_id.in => parent_ids)
+      end
+
+      ##
       # Returns siblings below the current document.
       # Siblings with a position greater than this documents's position.
       def lower_siblings
@@ -181,7 +187,7 @@ module Mongoid
         if self.siblings.empty? || self.siblings.collect(&:position).compact.empty?
           self.position = 0
         else
-          self.position = self.siblings.max(:position) + 1
+          self.position = self.siblings.max(:position).to_i + 1
         end
       end
     end
